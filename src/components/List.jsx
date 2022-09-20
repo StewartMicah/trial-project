@@ -17,44 +17,55 @@ function List() {
       const q = query(collection(db, "items"));
 
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        setItems(querySnapshot.docs);
+        const docs = [].concat(querySnapshot.docs);
+
+        docs.sort((a, b) => {
+            if (a.data().created > b.data().created) {
+              return -1;
+            } else if (a.data().created < b.data().created) {
+              return 1;
+            }
+            return 0;
+          });
+
+        docs.sort((a, b) => {
+          if (a.data().active && !b.data().active) {
+            return -1;
+          } else if (!a.data().active && b.data().active) {
+            return 1;
+          }
+          return 0;
+        });
+
+        setItems(docs);
       });
     }
     getItems();
   }, []);
 
-  async function toggleHandler(item){
+  async function toggleHandler(item) {
     const document = doc(db, "items", item.id);
-  await updateDoc(document, {
-    active: !item.data().active
-  });
+    await updateDoc(document, {
+      active: !item.data().active,
+    });
   }
 
- 
-  
 
-  console.log(items);
 
   return (
     <div className="list">
       {items.map((item) => (
         <div key={item.id} className="listItems">
-          <input 
-          type={"checkbox"}
-          checked={!item.data().active}
-          onChange={() => toggleHandler(item)}
-          ></input>
-          {item.id}
-        </div>
-      ))}
-      {items.map((item) => (
-        <div key={item.id} className="listItems">
-          <input 
-          type={"checkbox"}
-          checked={!item.data().active}
-          onChange={() => toggleHandler(item)}
-          ></input>
-          {item.id}
+          <label className="container">
+            <input
+              className="checkbox"
+              type={"checkbox"}
+              checked={!item.data().active}
+              onChange={() => toggleHandler(item)}
+            ></input>
+            <span className="checkmark"></span>
+          </label>
+          <div className={!item.data().active ? "Done" : ""}>{item.id}</div>
         </div>
       ))}
     </div>

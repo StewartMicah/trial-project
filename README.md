@@ -53,4 +53,3 @@ That's in case you aren't familiar with Firebase. You should already have an acc
 7. In `List.jsx` use `useEffect` to fetch real-time documents data and display results sorted by time it was created (latest first);
 8. Implement the option to mark a task item as completed and update its status in Firestore. Ideally, push all completed tasks to the end of the list. And do the opposite for incompleted ones;
 9. Set up a new repo on your Github account (or use any other hosting services to share your code), push your code there and send a link back to us.
-# trial-project
